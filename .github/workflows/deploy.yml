@@ -1,0 +1,18 @@
+# .github/workflows/deploy.yml
+name: Deploy
+on: ['deployment']
+
+jobs:
+  deployment:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - name: 'Deploy'
+      uses: 'deliverybot/helm@v3'
+      with:
+        release: 'litmus'
+        namespace: 'chaos-center'
+        chart: 'litmuschaos/litmus'
+        repo: 'https://litmuschaos.github.io/litmus-helm'
+        repo-alias: litmuschaos
+      env:
+        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
