@@ -1,0 +1,7 @@
+ingress:
+  host:
+    name: 2.9.202.71
+
+customLabels:
+  composant: litmus
+  environnement: minikube

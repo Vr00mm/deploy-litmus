@@ -1,0 +1,52 @@
+nameOverride: litmus
+
+ingress:
+  enabled: true
+    
+portal:
+  frontend:
+    replicas: 1
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: "50%"
+        maxUnavailable: 0
+      type: RollingUpdate
+    resources:
+      limits:
+        cpu: 200m
+        memory: 400Mi
+      requests:
+        cpu: 200m
+        memory: 400Mi
+  server:
+    updateStrategy:
+      rollingUpdate:
+        maxSurge: "50%"
+        maxUnavailable: 0
+      type: RollingUpdate 
+    graphqlServer:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 1Gi
+        requests:
+          cpu: 200m
+          memory: 500Mi
+    authServer:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 400Mi
+        requests:
+          cpu: 200m
+          memory: 400Mi
+mongo:
+  persistence:
+    storageClass: "default"
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
+      cpu: 200m
+      memory: 400Mi
