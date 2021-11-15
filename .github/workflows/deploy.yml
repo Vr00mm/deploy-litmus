@@ -13,13 +13,12 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
     - name: 'Deploy'
-      uses: 'deliverybot/helm@v1'
+      uses: 'deliverybot/helm@v3'
       with:
         helm: 'helm3'
         release: 'litmus'
         namespace: 'chaos-center'
-        chart: 'litmuschaos/litmus'
-        repo: 'https://litmuschaos.github.io/litmus-helm'
-        repo-alias: litmuschaos
+        chart: 'litmus'
+        repository: 'https://litmuschaos.github.io/litmus-helm'
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
