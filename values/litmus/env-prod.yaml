@@ -1,6 +1,6 @@
 ingress:
   host:
-    name: 2.9.202.71
+    name: litmus.remi-ziolkowski.fr
 
 customLabels:
   composant: litmus
