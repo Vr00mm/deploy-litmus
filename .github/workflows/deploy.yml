@@ -13,7 +13,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
     - name: 'Deploy'
-      uses: 'deliverybot/helm@v1'
+      uses: 'deliverybot/helm@v1.5.0'
       with:
         helm: 'helm3'
         release: 'litmus'
