@@ -14,8 +14,6 @@ jobs:
     runs-on: "ubuntu-latest"
     container:
       image: vr00mm/docker-helm-client:v0.1.0
-      env:
-        KUBECONFIG: "${{ secrets.KUBECONFIG }}"
     steps:
       - name: Load Workspace
         uses: actions/checkout@v2
@@ -24,4 +22,4 @@ jobs:
       - name: Update Repo
         run: helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install chaos-center litmuschaos/litmus --namespace litmus -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
+        run: helm --kubeconfig=<(echo "${{ secrets.KUBECONFIG }}") upgrade --install chaos-center litmuschaos/litmus --namespace litmus -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
