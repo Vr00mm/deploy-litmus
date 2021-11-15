@@ -4,16 +4,16 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'master'
+      - 'main'
   pull_request:
     branches:
-      - 'master'
+      - 'main'
 jobs:
   deployment:
     runs-on: 'ubuntu-latest'
     steps:
     - name: 'Deploy'
-      uses: 'deliverybot/helm@v3'
+      uses: 'deliverybot/helm@v2'
       with:
         release: 'litmus'
         namespace: 'chaos-center'
