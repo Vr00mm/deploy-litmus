@@ -17,9 +17,13 @@ jobs:
     steps:
       - name: Load Workspace
         uses: actions/checkout@v2
+      - name: Init Kubeconfig
+        run: echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
       - name: Add Litmus Repository
         run: helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
       - name: Update Repo
         run: helm repo update
       - name: Deploy Chart
-        run: helm --kubeconfig=<(echo "${{ secrets.KUBECONFIG }}") upgrade --install chaos-center litmuschaos/litmus --namespace litmus -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
+        run: helm upgrade --install chaos-center litmuschaos/litmus --namespace litmus -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
+      - name: Delete Kubeconfig
+        run: rm ~/.kube/config
