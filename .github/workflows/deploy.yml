@@ -32,6 +32,18 @@ jobs:
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
+  init-litmus:
+    name: "Init Litmus Params Through API"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/litmus-as-code:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+        LITMUS_URL: "http://litmus.remi-ziolkowski.fr/"
+	LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
+        LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
+
+
   deploy-prometheus:
     name: "Deploy Monitoring stack"
     runs-on: "ubuntu-latest"
