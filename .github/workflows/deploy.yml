@@ -51,6 +51,6 @@ jobs:
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install prometheus-community/kube-prometheus-stack
+        run: helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
