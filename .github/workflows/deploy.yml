@@ -9,16 +9,19 @@ on:
     branches:
       - 'main'
 jobs:
-  deployment:
-    runs-on: 'ubuntu-latest'
-    steps:
-    - name: 'Deploy'
-      uses: 'deliverybot/helm@v1.5.0'
-      with:
-        helm: 'helm3'
-        release: 'litmus'
-        namespace: 'chaos-center'
-        chart: 'litmus'
-        repository: 'https://litmuschaos.github.io/litmus-helm'
+  deploy-litmus:
+    name: "Deploy Litmus Chaos Center Helm Chart"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/docker-helm-client:v0.1.0
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Add Litmus Repository
+        run: helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
+      - name: Update Repo
+        run: helm repo update
+      - name: Deploy Chart
+        run: helm upgrade --install chaos-center litmuschaos/litmus --namespace litmus -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
