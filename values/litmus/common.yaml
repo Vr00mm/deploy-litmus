@@ -37,7 +37,7 @@ portal:
           memory: 400Mi
 mongo:
   persistence:
-    storageClass: "default"
+    storageClass: "standard"
   resources:
     limits:
       cpu: 200m
