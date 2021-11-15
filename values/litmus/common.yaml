@@ -6,11 +6,6 @@ ingress:
 portal:
   frontend:
     replicas: 1
-    updateStrategy:
-      rollingUpdate:
-        maxSurge: "50%"
-        maxUnavailable: 0
-      type: RollingUpdate
     resources:
       limits:
         cpu: 200m
