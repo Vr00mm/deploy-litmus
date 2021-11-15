@@ -13,7 +13,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     steps:
     - name: 'Deploy'
-      uses: 'deliverybot/helm@v2'
+      uses: 'deliverybot/helm3@v1'
       with:
         release: 'litmus'
         namespace: 'chaos-center'
