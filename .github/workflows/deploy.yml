@@ -39,10 +39,15 @@ jobs:
       image: vr00mm/litmus-as-code:v0.1.0
       env:
         KUBECONFIG: "/tmp/kubeconfig"
-        LITMUS_URL: "http://litmus.remi-ziolkowski.fr/"
-	LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
+        LITMUS_URL: ${{ secrets.LITMUS_URL }}
+        LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
         LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
-
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Say Hello
+        run: |
+          echo "Hello"
 
   deploy-prometheus:
     name: "Deploy Monitoring stack"
