@@ -9,6 +9,25 @@ on:
     branches:
       - 'main'
 jobs:
+  deploy-oidc-provider:
+    name: "Deploy OIDC Provider with yaml manifest"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/docker-helm-client:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Init Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
+          chmod 0600 /tmp/kubeconfig
+      - name: Deploy Manifest
+        run: kubectl -n 'oidc-provider' apply -f ./src/oidc-provider/manifest.yaml
+      - name: Delete Kubeconfig
+        run: rm /tmp/kubeconfig
+
   deploy-litmus:
     name: "Deploy Litmus Chaos Center Helm Chart"
     runs-on: "ubuntu-latest"

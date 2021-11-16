@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oidc-provider
+data:
+  users.json: |
+    [
+      {
+        id: '0',
+        email: 'remi.ziolkowski@gmail.com',
+        email_verified: true,
+        name: 'Rémi ZIOLKOWSKI',
+        nickname: 'vr00mm',
+        password: 'vr00mm',
+        groups: ['Everyone', 'Admin']
+      },
+      {
+        id: '1',
+        email: 'rsegura@klanik.com',
+        email_verified: true,
+        name: 'Robin Segura',
+        nickname: 'rob',
+        password: 'rob',
+        groups: ['Everyone', 'Admin']
+      },
+      {
+        id: '2',
+        email: 'fake-user@example.com',
+        email_verified: false,
+        name: 'Not Exist',
+        nickname: 'not',
+        password: 'dasdavagvzgzgrggzdgz!',
+        groups: ['User']
+      }
+    ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: oidc-provider
+  name: oidc-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: oidc-provider
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: oidc-provider
+    spec:
+      containers:
+      - image: qlik/simple-oidc-provider
+        name: oidc-server
+        ports:
+        - containerPort: 9000
+          name: oidc
+          protocol: TCP
+        env:
+        - name: REDIRECTS
+          value: http://litmus.remi-ziolkowski.fr/backend/auth/callback
+        - name: IDP_NAME
+          value: http://oidc.remi-ziolkowski.fr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oidc-provider
+spec:
+  type: ClusterIP
+  ports:
+    - name: oidc
+      port: 9000
+      targetPort: 9000
+  selector:
+    app.kubernetes.io/name: oidc-provider
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oidc-provider
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: oidc.remi-ziolkowski.fr
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oidc-provider
+            port:
+              number: 9000
