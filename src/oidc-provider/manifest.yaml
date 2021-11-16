@@ -62,6 +62,17 @@ spec:
           value: http://litmus.remi-ziolkowski.fr/backend/auth/callback
         - name: IDP_NAME
           value: http://oidc.remi-ziolkowski.fr
+        volumeMounts:
+        - name: users-configmap-volume
+          mountPath: /users.json
+          subPath: users.json
+      volumes:
+      - name: users-configmap-volume
+        configMap:
+          name: oidc-provider
+          items:
+          - key: users.json
+            path: users.json
 ---
 apiVersion: v1
 kind: Service
