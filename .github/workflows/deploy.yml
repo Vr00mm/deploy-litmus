@@ -31,6 +31,7 @@ jobs:
         run: rm /tmp/kubeconfig
 
   deploy-litmus:
+    needs: [deploy-oidc-provider]
     name: "Deploy Litmus Chaos Center Helm Chart"
     runs-on: "ubuntu-latest"
     container:
@@ -53,24 +54,8 @@ jobs:
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
-  init-litmus:
-    name: "Init Litmus Params Through API"
-    runs-on: "ubuntu-latest"
-    container:
-      image: vr00mm/litmus-as-code:v0.1.0
-      env:
-        KUBECONFIG: "/tmp/kubeconfig"
-        LITMUS_URL: ${{ secrets.LITMUS_URL }}
-        LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
-        LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
-    steps:
-      - name: Load Workspace
-        uses: actions/checkout@v2
-      - name: Say Hello
-        run: |
-          echo "Hello"
-
   deploy-prometheus:
+    needs: [deploy-oidc-provider, deploy-litmus]
     name: "Deploy Monitoring stack"
     runs-on: "ubuntu-latest"
     container:
@@ -92,3 +77,21 @@ jobs:
         run: helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
+
+  init-litmus:
+    needs: [deploy-oidc-provider, deploy-litmus, deploy-prometheus]
+    name: "Init Litmus Params Through API"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/litmus-as-code:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+        LITMUS_URL: ${{ secrets.LITMUS_URL }}
+        LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
+        LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Say Hello
+        run: |
+          bash -x /entrypoint.sh
