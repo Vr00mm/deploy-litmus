@@ -25,7 +25,7 @@ jobs:
           chmod 0600 /tmp/kubeconfig
       - name: Deploy Manifest
         run: |
-          kubectl create namespace/oidc-provider || true
+          kubectl create namespace "oidc-provider" || true
           kubectl -n 'oidc-provider' apply -f ./src/oidc-provider/manifest.yaml
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
