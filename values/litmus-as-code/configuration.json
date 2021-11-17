@@ -9,7 +9,7 @@
         "hubs": [
            {
              "name": "demo-litmus",
-             "url": "https://github.com/Vr00mm/litmus-demo-hub	",
+             "url": "https://github.com/Vr00mm/litmus-demo-hub",
              "branch": "main"
            }
         ]
