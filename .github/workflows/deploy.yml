@@ -52,5 +52,5 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
           chmod 0600 /tmp/kubeconfig
       - name: Configure Litmus
-        run: "kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 9091:9091 &"
+        run: "kubectl -n litmus port-forward svc/litmusportal-frontend 9091:9091 &"
       - run: "bash -x /entrypoint.sh ./values/litmus-as-code/configuration.json"
