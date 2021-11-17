@@ -10,7 +10,6 @@ on:
       - 'main'
 jobs:
   init-litmus:
-    needs: [deploy-oidc-provider, deploy-litmus, deploy-prometheus]
     name: "Init Litmus Params Through API"
     runs-on: "ubuntu-latest"
     container:
@@ -30,5 +29,4 @@ jobs:
       - name: Configure Litmus
         run: |
           kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 8080:9091 &
-          sleep 3
           bash -x /entrypoint.sh
