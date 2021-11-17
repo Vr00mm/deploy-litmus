@@ -16,7 +16,7 @@ jobs:
       image: vr00mm/litmus-as-code:v0.1.0
       env:
         KUBECONFIG: "/tmp/kubeconfig"
-        KUBECONTEXT: "minikube"
+        KUBE_CONTEXT: "minikube"
         LITMUS_URL: "http://127.0.0.1:9091"
         LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
         LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
