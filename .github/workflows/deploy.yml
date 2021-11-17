@@ -29,6 +29,8 @@ jobs:
           helm repo update
       - name: Deploy Chart
         run: helm upgrade --install chaos-center litmuschaos/litmus --version "2.0.0" --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
+      - name: smoke-test
+        run: "kubectl -n litmus wait --for=condition=Ready pods --all"
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
