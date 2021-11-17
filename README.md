@@ -1,17 +1,18 @@
+```
 git clone https://github.com/Vr00mm/deploy-litmus.git
-
+```
 
 ## Litmus
+```
 helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
 helm repo update
 helm upgrade --install chaos-center litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
 kubectl -n litmus wait --for=condition=Ready pods --all
-
+```
 
 ## Autoconf
 
-
-
+```
 docker run --net=host --rm \
 -e "KUBE_CONTEXT=minikube" \
 -e "LITMUS_URL=http://127.0.0.1:9091" \
@@ -25,7 +26,19 @@ docker run --net=host --rm \
 
 	kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 9091:9091 &
 	bash /entrypoint.sh /root/configuration.json
+```
 
+## Podtato head
 
+```
 kubectl apply -f ./src/podtato-head/manifest.yaml
 kubectl -n podtato-kubectl wait --for=condition=Ready pods --all
+```
+
+## Deploy monitoring
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+```
