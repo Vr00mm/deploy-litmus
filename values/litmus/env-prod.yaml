@@ -1,7 +1,3 @@
-ingress:
-  host:
-    name: litmus.remi-ziolkowski.fr
-
 customLabels:
   composant: litmus
   environnement: minikube
