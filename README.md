@@ -25,3 +25,7 @@ docker run --net=host \
 
 	kubectl -n litmus port-forward svc/litmusportal-frontend 9091:9091 &
 	bash /entrypoint.sh /root/configuration.sh
+
+
+kubectl apply -f ./src/podtato-head/manifest.yaml
+kubectl -n podtato-kubectl wait --for=condition=Ready pods --all
