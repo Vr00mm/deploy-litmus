@@ -16,7 +16,7 @@ jobs:
       image: vr00mm/litmus-as-code:v0.1.0
       env:
         KUBECONFIG: "/tmp/kubeconfig"
-        KUBE_CONTEXT: minikube
+        KUBECONTEXT: "minikube"
         LITMUS_URL: "http://127.0.0.1:9091"
         LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
         LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
@@ -29,4 +29,4 @@ jobs:
           chmod 0600 /tmp/kubeconfig
       - name: Configure Litmus
         run: "kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 9091:9091 &"
-      - run: "bash -x /entrypoint.sh"
+      - run: "bash -x /entrypoint.sh ./values/litmus-as-code/configuration.json"
