@@ -37,12 +37,14 @@ docker run --net=host --rm \
 ```
 
 
-## deploy agent
+## deploy agent (external agent)
+```
 litmusctl config set-account  --endpoint "http://$(minikube ip):$(minikube kubectl -- -n litmus get svc/chaos-center-litmus-frontend-service -ojson |jq -r '.spec.ports[0].nodePort')" \
 --username "admin" \
 --password "litmus" 
 
 litmusctl create agent 
+```
 
 ## Podtato head
 
