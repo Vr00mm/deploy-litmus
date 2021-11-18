@@ -57,18 +57,24 @@ kubectl -n podtato-kubectl wait --for=condition=Ready pods --all
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+kubectl -n monitoring wait --for=condition=Ready pods --all
 ```
 
 
 # Open Litmus
+```
 firefox http://$(minikube ip):$(minikube kubectl -- -n litmus get svc/chaos-center-litmus-frontend-service -ojson |jq -r '.spec.ports[0].nodePort')
+```
 
 # Open grafana
+```
 minikube kubectl -- -n monitoring port-forward svc/kube-prometheus-stack-grafana 8080:80 &
 firefox http://127.0.0.1:8080
-
+```
 #admin/prom-operator
 
 
 # Open podtatohead
+```
 firefox http://$(minikube ip):$(minikube kubectl -- -n podtato-kubectl get svc/podtato-main -ojson |jq -r '.spec.ports[0].nodePort')
+```
