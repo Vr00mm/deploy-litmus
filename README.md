@@ -2,6 +2,9 @@
 git clone https://github.com/Vr00mm/deploy-litmus.git
 ```
 
+export KUBECONFIG=${HOME}/.kube/config_minikube
+
+
 ## Litmus
 ```
 helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
@@ -19,14 +22,18 @@ docker run --net=host --rm \
 -e "LITMUS_USERNAME=admin" \
 -e "LITMUS_PASSWORD=litmus" \
 -v "$(pwd)/values/litmus-as-code/configuration.json:/root/configuration.json" \
--v "${HOME}/.kube/config:/root/.kube/config" \
--v "${HOME}/.kube/minikube:/root/.minikube" \
+-v "${HOME}/.kube/config_minikube:/root/.kube/config" \
+-v "${HOME}/.minikube:${HOME}/.minikube" \
 --entrypoint /bin/sh \
 -it vr00mm/litmus-as-code:v0.1.0
 
 	kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 9091:9091 &
 	bash /entrypoint.sh /root/configuration.json
 ```
+
+
+## deploy agent
+litmusctl config set-account  --endpoint "" --password "" --username ""
 
 ## Podtato head
 
@@ -42,3 +49,17 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm repo update
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
 ```
+
+
+# Open Litmus
+firefox http://$(minikube ip):$(minikube kubectl -- -n litmus get svc/chaos-center-litmus-frontend-service -ojson |jq -r '.spec.ports[0].nodePort')
+
+# Open grafana
+minikube kubectl -- -n monitoring port-forward svc/kube-prometheus-stack-grafana 8080:80 &
+firefox http://127.0.0.1:8080
+
+#admin/prom-operator
+
+
+# Open podtatohead
+firefox http://$(minikube ip):$(minikube kubectl -- -n podtato-kubectl get svc/podtato-main -ojson |jq -r '.spec.ports[0].nodePort')
