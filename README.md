@@ -1,9 +1,14 @@
+# Deploy and test litmus chaos stack ( litmus + monitoring + target app + hub-gen)
+
+## Prerequis
+
 ```
 git clone https://github.com/Vr00mm/deploy-litmus.git
 ```
 
+```
 export KUBECONFIG=${HOME}/.kube/config_minikube
-
+```
 
 ## Litmus
 ```
@@ -33,7 +38,11 @@ docker run --net=host --rm \
 
 
 ## deploy agent
-litmusctl config set-account  --endpoint "" --password "" --username ""
+litmusctl config set-account  --endpoint "http://$(minikube ip):$(minikube kubectl -- -n litmus get svc/chaos-center-litmus-frontend-service -ojson |jq -r '.spec.ports[0].nodePort')" \
+--username "admin" \
+--password "litmus" 
+
+litmusctl create agent 
 
 ## Podtato head
 
