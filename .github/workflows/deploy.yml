@@ -101,7 +101,7 @@ jobs:
              -f ./values/litmus/common.yaml \
              -f ./values/litmus/env-prod.yaml \
              --set "ingress.host.name=${{ secrets.LITMUS_URL }}" \
-             --set "portal.server.authServer.env.ADMIN_USERNAME=${{ secrets.LITMUS_USER }}" \
+             --set "portal.server.authServer.env.ADMIN_USERNAME=${{ secrets.LITMUS_USERNAME }}" \
              --set "portal.server.authServer.env.ADMIN_PASSWORD=${{ secrets.LITMUS_PASSWORD }}" \
              --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
              --set "adminConfig.DBPASSWORD=${{ secrets.LITMUS_DB_PASSWORD }}" \
