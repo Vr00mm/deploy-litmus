@@ -9,8 +9,8 @@ on:
     branches:
       - 'main'
 jobs:
-  deploy-litmus:
-    name: "Deploy Litmus Chaos Center Helm Chart"
+  deploy-prometheus:
+    name: "Deploy Monitoring stack"
     runs-on: "ubuntu-latest"
     container:
       image: vr00mm/docker-helm-client:v0.1.0
@@ -23,29 +23,22 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
           chmod 0600 /tmp/kubeconfig
-      - name: Add Litmus Repository
+      - name: Add prometheus-community Repository
         run: |
-          helm repo add litmuschaos https://vr00mm.github.io
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install chaos-center litmuschaos/litmus --version "2.0.0" --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
-      - name: smoke-test
-        run: "kubectl -n litmus wait --for=condition=Ready pods --all"
+        run: helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
-  init-litmus:
-    name: "Init Litmus Params Through API"
-    needs: [deploy-litmus]
+  deploy-oidc-provider:
+    name: "Deploy OIDC Provider with yaml manifest"
     runs-on: "ubuntu-latest"
     container:
-      image: vr00mm/litmus-as-code:v0.1.0
+      image: vr00mm/docker-helm-client:v0.1.0
       env:
         KUBECONFIG: "/tmp/kubeconfig"
-        KUBE_CONTEXT: "minikube"
-        LITMUS_URL: "http://127.0.0.1:9091"
-        LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
-        LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
     steps:
       - name: Load Workspace
         uses: actions/checkout@v2
@@ -53,14 +46,14 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
           chmod 0600 /tmp/kubeconfig
-      - name: Configure Litmus
+      - name: Deploy Manifest
         run: |
-          kubectl -n litmus port-forward svc/litmusportal-frontend 9091:9091 &
-          sleep 3
-      - run: "bash -x /entrypoint.sh ./values/litmus-as-code/configuration.json"
-
+          kubectl create namespace "oidc-provider" || true
+          kubectl -n 'oidc-provider' apply -f ./src/oidc-provider/manifest.yaml
+      - name: Delete Kubeconfig
+        run: rm /tmp/kubeconfig
+        
   deploy-test-app:
-    needs: [deploy-oidc-provider, deploy-litmus]
     name: "Deploy test application"
     runs-on: "ubuntu-latest"
     container:
@@ -81,3 +74,50 @@ jobs:
 
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
+
+  deploy-litmus:
+    needs: [deploy-oidc-provider,deploy-prometheus,deploy-test-app]
+    name: "Deploy Litmus Chaos Center Helm Chart"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/docker-helm-client:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Init Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
+          chmod 0600 /tmp/kubeconfig
+      - name: Add Litmus Repository
+        run: |
+          helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
+          helm repo update
+      - name: Deploy Chart
+        run: helm upgrade --install chaos-center litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml
+      - name: Delete Kubeconfig
+        run: rm /tmp/kubeconfig
+
+  init-litmus:
+    needs: [deploy-litmus]
+    name: "Init Litmus Params Through API"
+    runs-on: "ubuntu-latest"
+    container:
+      image: vr00mm/litmus-as-code:v0.1.0
+      env:
+        KUBECONFIG: "/tmp/kubeconfig"
+        LITMUS_URL: 127.0.0.1:8080
+        LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
+        LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
+    steps:
+      - name: Load Workspace
+        uses: actions/checkout@v2
+      - name: Init Kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
+          chmod 0600 /tmp/kubeconfig
+      - name: Configure Litmus
+        run: |
+          kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 8080:9091 &
+          bash -x /entrypoint.sh
