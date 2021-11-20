@@ -276,7 +276,7 @@ spec:
       paths:
       - backend:
           service:
-            name: podtato-head
+            name: podtato-main
             port:
               number: 9000
         path: /
