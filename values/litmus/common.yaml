@@ -1,5 +1,3 @@
-nameOverride: litmus
-
 ingress:
   enabled: true
     
