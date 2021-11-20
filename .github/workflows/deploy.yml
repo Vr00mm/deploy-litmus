@@ -84,8 +84,6 @@ jobs:
             --namespace podtato-head --create-namespace \
             -f ./values/podtato-head/values.yaml \
             --set "ingress.hosts[0].host=podtato-head.${{ secrets.K8S_DOMAIN }}"
-            
-
           kubectl -n podtato-head wait --for=condition=Ready pods --all
 
       - name: Delete Kubeconfig

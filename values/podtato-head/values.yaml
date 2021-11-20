@@ -2,6 +2,7 @@ images:
   repositoryDirname: docker.io/vr00mm
 main:
   tag: "v2-latest"
+  serviceType: ClusterIP
 hats:
   tag: "v2-latest"
 leftLeg:
