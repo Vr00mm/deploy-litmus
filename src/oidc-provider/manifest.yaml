@@ -94,6 +94,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: oidc.remi-ziolkowski.fr
     http:

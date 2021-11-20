@@ -269,6 +269,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
   name: podtato-head
 spec:
+  ingressClassName: "nginx"
   rules:
   - host: podtato-head.remi-ziolkowski.fr
     http:
