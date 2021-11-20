@@ -18,4 +18,10 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  hosts:
+    - paths:
+        path: /
+service:
+  port: 9000
 
+ingress:
