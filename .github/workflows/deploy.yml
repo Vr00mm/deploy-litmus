@@ -106,18 +106,16 @@ jobs:
           helm repo update
       - name: Deploy Chart
         run: |
-#           helm upgrade --install litmusportal litmuschaos/litmus \
-            helm upgrade --install litmusportal ./src/litmus \
-             --namespace litmus --create-namespace \
-             -f ./values/litmus/common.yaml \
-             -f ./values/litmus/env-prod.yaml \
-             --set "ingress.host.name=${{ secrets.LITMUS_URL }}" \
-             --set "portal.server.authServer.env.ADMIN_USERNAME=${{ secrets.LITMUS_USERNAME }}" \
-             --set "portal.server.authServer.env.ADMIN_PASSWORD=${{ secrets.LITMUS_PASSWORD }}" \
-             --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
-             --set "adminConfig.DBPASSWORD=${{ secrets.LITMUS_DB_PASSWORD }}" \
-             --set "adminConfig.JWTSecret=${{ secrets.LITMUS_JWT_SECRET }}"
-
+          helm upgrade --install litmusportal ./src/litmus \
+            --namespace litmus --create-namespace \
+            -f ./values/litmus/common.yaml \
+            -f ./values/litmus/env-prod.yaml \
+            --set "ingress.host.name=${{ secrets.LITMUS_URL }}" \
+            --set "portal.server.authServer.env.ADMIN_USERNAME=${{ secrets.LITMUS_USERNAME }}" \
+            --set "portal.server.authServer.env.ADMIN_PASSWORD=${{ secrets.LITMUS_PASSWORD }}" \
+            --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
+            --set "adminConfig.DBPASSWORD=${{ secrets.LITMUS_DB_PASSWORD }}" \
+            --set "adminConfig.JWTSecret=${{ secrets.LITMUS_JWT_SECRET }}"
            kubectl -n litmus wait --for=condition=Ready pods --all
            curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.LITMUS_URL }}
 
