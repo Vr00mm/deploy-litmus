@@ -95,7 +95,7 @@ jobs:
           helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
           helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install litmus litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml --set "ingress.host.name=litmus.remi-ziolkowski.fr"
+        run: helm upgrade --install litmusportal litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml --set "ingress.host.name=litmus.remi-ziolkowski.fr"
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
@@ -107,7 +107,7 @@ jobs:
       image: vr00mm/litmus-as-code:v0.1.0
       env:
         KUBECONFIG: "/tmp/kubeconfig"
-        LITMUS_URL: 127.0.0.1:8080
+        LITMUS_URL: http://litmus.remi-ziolkowski.fr
         LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
         LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
     steps:
@@ -119,5 +119,4 @@ jobs:
           chmod 0600 /tmp/kubeconfig
       - name: Configure Litmus
         run: |
-          kubectl -n litmus port-forward svc/chaos-center-litmus-frontend-service 8080:9091 &
           bash -x /entrypoint.sh
