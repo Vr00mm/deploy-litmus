@@ -8,7 +8,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-main
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -35,7 +34,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-main
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -54,7 +52,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-hats
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -85,7 +82,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-hats
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -102,7 +98,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-left-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -129,7 +124,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-left-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -146,7 +140,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-left-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -173,7 +166,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-left-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -190,7 +182,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-right-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -217,7 +208,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-right-leg
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -234,7 +224,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podtato-right-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -261,7 +250,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podtato-right-arm
-  namespace: podtato-kubectl
   labels:
     app: podtato-head
 spec:
@@ -273,3 +261,22 @@ spec:
       protocol: TCP
       targetPort: 9000
   type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: podtato-head
+spec:
+  rules:
+  - host: podtato-head.remi-ziolkowski.fr
+    http:
+      paths:
+      - backend:
+          service:
+            name: podtato-head
+            port:
+              number: 9000
+        path: /
+        pathType: Prefix

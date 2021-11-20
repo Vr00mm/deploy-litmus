@@ -1,7 +1,7 @@
 nameOverride: litmus
 
 ingress:
-  enabled: false
+  enabled: true
     
 portal:
   frontend:
