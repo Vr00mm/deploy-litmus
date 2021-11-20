@@ -28,7 +28,13 @@ jobs:
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+        run: |
+          helm upgrade --install \
+            kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+            --namespace monitoring --create-namespace \
+            -f values/kube-prometheus-stack/values.yaml \
+            --set "grafana.adminPassword=${{ secrets.GRAFANA_SECRET }}" \
+            --set "grafana.ingress.hosts[0]=grafana.remi-ziolkowski.fr"
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
