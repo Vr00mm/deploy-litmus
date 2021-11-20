@@ -116,7 +116,7 @@ jobs:
             --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
             --set "adminConfig.DBPASSWORD=${{ secrets.LITMUS_DB_PASSWORD }}" \
             --set "adminConfig.JWTSecret=${{ secrets.LITMUS_JWT_SECRET }}"
-           kubectl -n litmus wait --for=condition=Ready pods --all
+           kubectl -n litmus wait --for=condition=Ready --timeout=180 pods --all
            curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.LITMUS_URL }}
 
       - name: Delete Kubeconfig
