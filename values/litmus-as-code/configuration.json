@@ -2,7 +2,7 @@
   {
     "name": "minikube",
     "gitops": {},
-    "agents": [],
+    "agents": ["minikube"],
     "projects": [
       {
         "name": "DevOPS D-DAY",

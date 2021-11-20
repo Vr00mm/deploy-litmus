@@ -106,7 +106,8 @@ jobs:
           helm repo update
       - name: Deploy Chart
         run: |
-           helm upgrade --install litmusportal litmuschaos/litmus \
+#           helm upgrade --install litmusportal litmuschaos/litmus \
+            helm upgrade --install litmusportal ./src/litmus \
              --namespace litmus --create-namespace \
              -f ./values/litmus/common.yaml \
              -f ./values/litmus/env-prod.yaml \
