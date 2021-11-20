@@ -95,7 +95,7 @@ jobs:
           helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm/
           helm repo update
       - name: Deploy Chart
-        run: helm upgrade --install litmusportal litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml --set "ingress.host.name=litmus.remi-ziolkowski.fr"
+        run: helm upgrade --install litmusportal litmuschaos/litmus --namespace litmus --create-namespace -f ./values/litmus/common.yaml -f ./values/litmus/env-prod.yaml --set "ingress.host.name=litmus.remi-ziolkowski.fr" --set "portal.server.authServer.env[\"ADMIN_PASSWORD\"]=${{ secrets.LITMUS_PASSWORD }}"
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
