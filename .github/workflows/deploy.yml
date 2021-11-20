@@ -144,4 +144,4 @@ jobs:
           chmod 0600 /tmp/kubeconfig
       - name: Configure Litmus
         run: |
-          bash -x /entrypoint.sh ./values/litmus-as-code/configuration.json
+          bash /entrypoint.sh ./values/litmus-as-code/configuration.json
