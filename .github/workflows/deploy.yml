@@ -54,12 +54,19 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > /tmp/kubeconfig
           chmod 0600 /tmp/kubeconfig
-      - name: Deploy Manifest
+      - name: Add Dex Repository
         run: |
-          kubectl create namespace "oidc-provider" || true
-          kubectl -n 'oidc-provider' apply -f ./src/oidc-provider/manifest.yaml
+          helm repo add dex https://charts.dexidp.io
+          helm repo update
+      - name: Deploy Chart
+        run: |
+          helm upgrade --install \
+            oidc-dex dex/dex \
+            --namespace oidc-provider --create-namespace \
+            -f values/dex/values.yaml \
+            -f values/dex/example.conf \
+            --set "ingress.hosts[0]=oidc.${{ secrets.K8S_DOMAIN }}"
           kubectl -n oidc-provider wait --for=condition=Ready pods --all
-
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
         
