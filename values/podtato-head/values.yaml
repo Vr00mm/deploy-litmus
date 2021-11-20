@@ -1,0 +1,21 @@
+images:
+  repositoryDirname: docker.io/vr00mm
+main:
+  tag: "v2-latest"
+hats:
+  tag: "v2-latest"
+leftLeg:
+  tag: "v2-latest"
+leftArm:
+  tag: "v2-latest"
+rightLeg:
+  tag: "v2-latest"
+rightArm:
+  tag: "v2-latest"
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
