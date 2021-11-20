@@ -35,6 +35,8 @@ jobs:
             -f values/kube-prometheus-stack/values.yaml \
             --set "grafana.adminPassword=${{ secrets.GRAFANA_SECRET }}" \
             --set "grafana.ingress.hosts[0]=grafana.remi-ziolkowski.fr"
+          kubectl -n monitoring wait --for=condition=Ready pods --all
+
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
 
@@ -56,6 +58,8 @@ jobs:
         run: |
           kubectl create namespace "oidc-provider" || true
           kubectl -n 'oidc-provider' apply -f ./src/oidc-provider/manifest.yaml
+          kubectl -n oidc-provider wait --for=condition=Ready pods --all
+
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
         
@@ -112,6 +116,8 @@ jobs:
              --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
              --set "adminConfig.DBPASSWORD=${{ secrets.LITMUS_DB_PASSWORD }}" \
              --set "adminConfig.JWTSecret=${{ secrets.LITMUS_JWT_SECRET }}"
+          kubectl -n litmus wait --for=condition=Ready pods --all
+          [ `curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.LITMUS_URL }}` != "200" ] && echo "status was other than '200': was '$status'" && exit 1
 
       - name: Delete Kubeconfig
         run: rm /tmp/kubeconfig
