@@ -5,7 +5,7 @@
     "agents": ["minikube"],
     "projects": [
       {
-        "name": "DevOPS D-DAY",
+        "name": "Polytech Montpellier",
         "hubs": [
            {
              "name": "demo-litmus",
