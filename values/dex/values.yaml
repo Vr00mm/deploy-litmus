@@ -16,7 +16,7 @@ ingress:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     cert-manager.io/cluster-issuer: "letsencrypt"
   tls:
-    - secretName: dex
+    - secretName: dex-tls
 
   hosts:
   - paths:

@@ -34,7 +34,8 @@ jobs:
             --namespace monitoring --create-namespace \
             -f values/kube-prometheus-stack/values.yaml \
             --set "grafana.adminPassword=${{ secrets.GRAFANA_SECRET }}" \
-            --set "grafana.ingress.hosts[0]=grafana.${{ secrets.K8S_DOMAIN }}"
+            --set "grafana.ingress.hosts[0]=grafana.${{ secrets.K8S_DOMAIN }}" \
+            --set "grafana.ingress.tls[0].hosts[0]=grafana.${{ secrets.K8S_DOMAIN }}"
           kubectl -n monitoring wait --for=condition=Ready pods --all
 
       - name: Delete Kubeconfig
@@ -91,7 +92,9 @@ jobs:
             podtato-head ./src/podtato-head \
             --namespace podtato-head --create-namespace \
             -f ./values/podtato-head/values.yaml \
-            --set "ingress.hosts[0].host=podtato-head.${{ secrets.K8S_DOMAIN }}"
+            --set "ingress.hosts[0].host=podtato-head.${{ secrets.K8S_DOMAIN }}" \
+            --set "ingress.tls[0].hosts[0]=podtato-head.${{ secrets.K8S_DOMAIN }}"
+
           kubectl -n podtato-head wait --for=condition=Ready pods --all
 
       - name: Delete Kubeconfig
@@ -123,6 +126,7 @@ jobs:
             -f ./values/litmus/common.yaml \
             -f ./values/litmus/env-prod.yaml \
             --set "ingress.host.name=litmus.${{ secrets.K8S_DOMAIN }}" \
+            --set "ingress.tls[0].hosts[0]=litmus.${{ secrets.K8S_DOMAIN }}" \
             --set "portal.server.authServer.env.ADMIN_USERNAME=${{ secrets.LITMUS_USERNAME }}" \
             --set "portal.server.authServer.env.ADMIN_PASSWORD=${{ secrets.LITMUS_PASSWORD }}" \
             --set "adminConfig.DBUSER=${{ secrets.LITMUS_DB_USER }}" \
