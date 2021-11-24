@@ -10,6 +10,14 @@ service:
 ingress:
   enabled: true
   className: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt-staging"
+  tls:
+    - secretName: dex
+
   hosts:
   - paths:
       - path: "/"    
