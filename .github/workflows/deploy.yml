@@ -65,7 +65,7 @@ jobs:
             --namespace oidc-provider --create-namespace \
             -f values/dex/values.yaml \
             -f values/dex/example.conf \
-            --set "ingress.hosts[0].host=oidc.${{ secrets.K8S_DOMAIN }}"
+            --set "ingress.hosts[0].host=oidc.${{ secrets.K8S_DOMAIN }}" \
             --set "ingress.tls[0].host.[0]=oidc.${{ secrets.K8S_DOMAIN }}"
           kubectl -n oidc-provider wait --for=condition=Ready pods --all
       - name: Delete Kubeconfig
