@@ -147,7 +147,7 @@ jobs:
       env:
         KUBECONFIG: "/tmp/kubeconfig"
         KUBE_CONTEXT: "minikube"
-        LITMUS_URL: "http://litmus.${{ secrets.K8S_DOMAIN }}"
+        LITMUS_URL: "https://litmus.${{ secrets.K8S_DOMAIN }}"
         LITMUS_USERNAME : ${{ secrets.LITMUS_USERNAME }}
         LITMUS_PASSWORD : ${{ secrets.LITMUS_PASSWORD }}
     steps:
