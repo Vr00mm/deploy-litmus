@@ -27,6 +27,8 @@ portal:
         maxUnavailable: 0
       type: RollingUpdate 
     graphqlServer:
+      genericEnv:
+        SELF_CLUSTER: false
       resources:
         limits:
           cpu: 500m
