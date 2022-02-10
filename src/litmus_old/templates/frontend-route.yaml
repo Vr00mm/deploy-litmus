@@ -22,5 +22,5 @@ spec:
     termination: edge
   to:
     kind: Service
-    name: litmusportal-frontend
+    name: litmusportal-frontend-service
 {{- end }}

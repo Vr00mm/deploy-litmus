@@ -35,7 +35,8 @@ spec:
       {{- end }}
       containers:
         - name: mongo
-          image: {{ .Values.image.imageRegistryName }}/{{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+          #image: {{ .Values.image.imageRegistryName }}/{{ .Values.mongo.image.repository }}:{{ .Values.mongo.image.tag }}
+          image: mongo:4.0.5
           ports:
             - containerPort: {{ .Values.mongo.containerPort }}
               name: mongodb
@@ -66,14 +67,26 @@ spec:
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  name: {{ include "litmus-portal.fullname" . }}-admin-config
+                secretKeyRef:
+                  name: {{ include "litmus-portal.fullname" . }}-admin-secret
                   key: DB_USER
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: {{ include "litmus-portal.fullname" . }}-admin-config
+                secretKeyRef:
+                  name: {{ include "litmus-portal.fullname" . }}-admin-secret
                   key: DB_PASSWORD
+    {{- with .Values.mongo.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mongo.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mongo.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: mongo-persistent-storage

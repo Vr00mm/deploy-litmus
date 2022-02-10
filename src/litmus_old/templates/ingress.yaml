@@ -41,10 +41,10 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: litmusportal-frontend
+            name: litmusportal-frontend-service
             port:
               number: 9091
-      - path: {{ .Values.ingress.host.paths.server }}
+      - path: {{ .Values.ingress.host.paths.backend }}
         pathType: ImplementationSpecific
         backend:
           service: 
@@ -54,9 +54,9 @@ spec:
     {{- else if semverCompare "<1.19-0" .Capabilities.KubeVersion.GitVersion }}
       - path: {{ .Values.ingress.host.paths.frontend }}
         backend:
-          serviceName: litmusportal-frontend
+          serviceName: litmusportal-frontend-service
           servicePort: 9091
-      - path: {{ .Values.ingress.host.paths.server }}
+      - path: {{ .Values.ingress.host.paths.backend }}
         backend: 
           serviceName: litmusportal-server-service
           servicePort: 9002
